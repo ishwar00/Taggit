@@ -42,9 +42,9 @@ func Execute() error {
 		return err
 	}
 	paths = append(paths, "Exit")
-	if len(paths)-1 > 0 {
+	if len(paths) > 0 {
 		prompt := promptui.Select{
-			Label: fmt.Sprintf("Found %v results :) ", len(paths)),
+			Label: fmt.Sprintf("Found %v results :) ", len(paths) - 1),
 			Items: paths,
 		}
 
