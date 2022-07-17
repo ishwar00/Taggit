@@ -19,13 +19,29 @@ type PathToTag struct {
 	Table map[string]map[string]bool
 }
 
+func (pt *PathToTag) Print() {
+	for path, tags := range pt.Table {
+		fmt.Printf("%v: %v\n", path, tags)
+	}
+}
+
 type TagToPath struct {
 	Table map[string]map[string]bool
 }
 
+func (tp *TagToPath) print() {
+	for tag, paths := range tp.Table {
+		fmt.Printf("%v: %v\n", tag, paths)
+	}
+}
+
 func isValidTag(tag string) bool {
+
+	if len(tag) == 0 {
+		return false
+	}
 	for _, c := range tag {
-		if !unicode.IsLetter(c) {
+		if !unicode.IsLetter(c) && !unicode.IsDigit(c) {
 			return false
 		}
 	}
@@ -43,7 +59,6 @@ func AddTags(path string) error {
 	}
 
 	result, err := prompt.Run()
-	fmt.Printf("entered values %v\n", result)
 	if err != nil {
 		return err
 	}
@@ -61,13 +76,64 @@ func AddTags(path string) error {
 		}
 	}
 	if len(invalideTags) > 0 {
-		fmt.Println("Invalid tags, which are not added:")
-		for _, tag := range invalideTags {
-			fmt.Println(color.RedString(tag))
-		}
+		fmt.Println("\nonly " + color.YellowString("alphanumeric") + " characters are allowed")
+		fmt.Println(color.RedString("Found invalid tags :(, following tags are not allowed:"))
+		printTagsRed(invalideTags)
+		fmt.Println("")
 	}
 	updateTable(validTags, path)
+	fmt.Printf("\nSuccefully added following tags to %v: \n", path)
+	printTagsGreen(validTags)
+	fmt.Println("")
 	return nil
+}
+
+func printTagsRed(tags []string) {
+	maxLength := 0
+
+	for _, tag := range tags {
+		if len(tag) > maxLength {
+			maxLength = len(tag)
+		}
+	}
+
+	for i, tag := range tags {
+		fmt.Printf(" %v", color.RedString(tag))
+		for i := 0; i < maxLength-len(tag)+1; i++ {
+			fmt.Print(" ")
+		}
+		if i+1 < len(tags) {
+			fmt.Print(",")
+		}
+
+		if (i+1)%5 == 0 {
+			fmt.Println("")
+		}
+	}
+}
+
+func printTagsGreen(tags []string) {
+	maxLength := 0
+
+	for _, tag := range tags {
+		if len(tag) > maxLength {
+			maxLength = len(tag)
+		}
+	}
+
+	for i, tag := range tags {
+		fmt.Printf(" %v", color.GreenString(tag))
+		for i := 0; i < maxLength-len(tag)+1; i++ {
+			fmt.Print(" ")
+		}
+		if i+1 < len(tags) {
+			fmt.Print(",")
+		}
+
+		if (i+1)%5 == 0 {
+			fmt.Println("")
+		}
+	}
 }
 
 func RecoverPathToTagTable(path string) (PathToTag, error) {
@@ -134,7 +200,6 @@ func updateTable(tags []string, path string) {
 		// first time we are tagging file
 		ptTable.Table[path] = make(map[string]bool, 0)
 		for _, tag := range tags {
-			fmt.Printf("## %v\n", tag)
 			ptTable.Table[path][tag] = true
 
 			_, ok := tpTable.Table[tag]
