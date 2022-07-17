@@ -9,9 +9,7 @@ import (
 func main() {
 	if err := cmd.Execute(); err != nil {
 		errMsg := fmt.Errorf("sorry, encountered an error: %w", err)
-		fmt.Println(errMsg)
+		cmd.ManageError(errMsg)
 	}
-	fmt.Println("Please press ENTER to exit...")
-	var input string
-	fmt.Scanln(&input)
+	cmd.Hold()
 }

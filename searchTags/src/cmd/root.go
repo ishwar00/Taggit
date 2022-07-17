@@ -16,7 +16,7 @@ var Tp string
 func init() {
 	buf, err := os.UserHomeDir()
 	if err != nil {
-		panic(err)
+		ManageError(err)
 	}
 	Tp = filepath.Join(buf, "Taggit/tagToPath.db")
 	createDB(Tp)
@@ -29,7 +29,7 @@ func Execute() error {
 
 	tag, err := prompt.Run()
 	if err != nil {
-		panic(err)
+		ManageError(err)
 	}
 
 	tag = strings.TrimSpace(tag)
@@ -42,7 +42,7 @@ func Execute() error {
 		return err
 	}
 	paths = append(paths, "Exit")
-	if len(paths) > 0 {
+	if len(paths)-1 > 0 {
 		prompt := promptui.Select{
 			Label: fmt.Sprintf("Found %v results :) ", len(paths)),
 			Items: paths,

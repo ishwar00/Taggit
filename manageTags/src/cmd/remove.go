@@ -20,8 +20,6 @@ func RemoveTags(path string) error {
 		return err
 	}
 
-	// fmt.Println("entered values are ", result)
-
 	tags := strings.Split(result, ",")
 	validTags := []string{}
 	for _, tag := range tags {
@@ -41,7 +39,6 @@ func RemoveTags(path string) error {
 		return err
 
 	}
-	// checkConsistency(tpTable, ptTable)
 
 	deletedTags := []string{}
 	unknownTags := []string{}
@@ -49,8 +46,6 @@ func RemoveTags(path string) error {
 	_, ok := ptTable.Table[path]
 	if ok {
 		for _, tag := range validTags {
-			// ptTable.Print()
-			// tpTable.print()
 			_, ok := ptTable.Table[path][tag]
 			if ok {
 				delete(ptTable.Table[path], tag)
@@ -59,8 +54,6 @@ func RemoveTags(path string) error {
 			} else {
 				unknownTags = append(unknownTags, tag)
 			}
-			// ptTable.Print()
-			// tpTable.print()
 		}
 	}
 
@@ -89,19 +82,4 @@ func RemoveTags(path string) error {
 	}
 
 	return nil
-}
-
-func checkConsistency(tpTable TagToPath, ptTable PathToTag) {
-
-	for path, tags := range ptTable.Table {
-		for tag := range tags {
-			_, ok := tpTable.Table[tag][path]
-			if !ok {
-				panic("tables are inconsistent!!!")
-			}
-		}
-	}
-
-	fmt.Println("tables are consistent :)")
-
 }

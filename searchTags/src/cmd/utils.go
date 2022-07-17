@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"unicode"
+
+	"github.com/fatih/color"
 )
 
 type PathToTag struct {
@@ -95,4 +97,16 @@ func isValidTag(tag string) bool {
 		}
 	}
 	return true
+}
+
+func Hold() {
+	var input string
+	fmt.Println("\n\nPress press ENTER to exit...")
+	fmt.Scanln(&input)
+}
+
+func ManageError(err error) {
+	color.Red(err.Error())
+	Hold()
+	os.Exit(1)
 }
