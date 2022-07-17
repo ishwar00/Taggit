@@ -157,6 +157,12 @@ func checkConsistency(tpTable TagToPath, ptTable PathToTag) {
 	fmt.Println("tables are consistent :)")
 }
 
+func Hold() {
+	var input string
+	fmt.Println("\n\nPress press ENTER to exit...")
+	fmt.Scanln(&input)
+}
+
 func ManageError(err error) {
 	color.Red(err.Error())
 	Hold()
