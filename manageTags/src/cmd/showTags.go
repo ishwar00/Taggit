@@ -1,6 +1,9 @@
 package cmd
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/fatih/color"
+)
 
 func ShowTags(path string) error {
 
@@ -10,12 +13,17 @@ func ShowTags(path string) error {
 	}
 
 	tags := []string{}
+
 	maxLength := 0
 	for tag := range ptTable.Table[path] {
 		tags = append(tags, tag)
 		if maxLength < len(tag) {
 			maxLength = len(tag)
 		}
+	}
+
+	if len(tags) == 0 {
+		fmt.Println("No tags to show :(")
 	}
 
 	for i, tag := range tags {
@@ -27,7 +35,7 @@ func ShowTags(path string) error {
 			fmt.Print(" ")
 		}
 		
-		fmt.Printf(" %v", tag)
+		fmt.Printf(" %v", color.CyanString(tag))
 
 		for i := 0; i < right; i++ {
 			fmt.Print(" ")
