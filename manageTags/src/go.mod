@@ -1,4 +1,4 @@
-module github.com/ishwar00/Taggit
+module github.com/ishwar00/Taggit/manageTags
 
 go 1.18
 

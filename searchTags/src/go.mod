@@ -2,6 +2,8 @@ module github.com/ishwar00/Taggit/searchTags
 
 go 1.18
 
+require github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
+
 require (
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/fatih/color v1.13.0 // indirect
