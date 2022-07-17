@@ -10,8 +10,8 @@ import (
 func RemoveTags(path string) error {
 
 	prompt := promptui.Prompt{
-		Label:     "please enter tags which are to removed: ",
-		Default:   " friends, birthday, pets",
+		Label:     "please enter tags which are to be removed",
+		Default:   " eg: friends, birthday, pets",
 		AllowEdit: false,
 	}
 
@@ -20,7 +20,7 @@ func RemoveTags(path string) error {
 		return err
 	}
 
-	fmt.Println("entered values are ", result)
+	// fmt.Println("entered values are ", result)
 
 	tags := strings.Split(result, ",")
 	validTags := []string{}
@@ -41,7 +41,7 @@ func RemoveTags(path string) error {
 		return err
 
 	}
-	checkConsistency(tpTable, ptTable)
+	// checkConsistency(tpTable, ptTable)
 
 	deletedTags := []string{}
 	unknownTags := []string{}
@@ -62,6 +62,10 @@ func RemoveTags(path string) error {
 			// ptTable.Print()
 			// tpTable.print()
 		}
+	}
+
+	if len(deletedTags) == 0 {
+		fmt.Println("No valid tags to remove :(")
 	}
 
 	if len(deletedTags) > 0 {

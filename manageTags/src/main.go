@@ -20,5 +20,9 @@ func main() {
 	}
 
 	cmd.Execute(os.Args[1])
+
+	var input string
+	fmt.Println("\nPress Enter to exit")
+	fmt.Scanln(&input)
 }
 

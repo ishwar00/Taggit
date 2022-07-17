@@ -50,7 +50,7 @@ func isValidTag(tag string) bool {
 func AddTags(path string) error {
 	prompt := promptui.Prompt{
 		Label:     "Hey there!, please enter tags",
-		Default:   "eg: tag1, tag2, tag3",
+		Default:   " eg: tag1, tag2, tag3",
 		AllowEdit: false,
 		Validate: func(input string) error {
 			return nil
@@ -99,6 +99,30 @@ func printTagsRed(tags []string) {
 
 	for i, tag := range tags {
 		fmt.Printf(" %v", color.RedString(tag))
+		for i := 0; i < maxLength-len(tag)+1; i++ {
+			fmt.Print(" ")
+		}
+		if i+1 < len(tags) {
+			fmt.Print(",")
+		}
+
+		if (i+1)%5 == 0 {
+			fmt.Println("")
+		}
+	}
+}
+
+func printTagsBlue(tags []string) {
+	maxLength := 0
+
+	for _, tag := range tags {
+		if len(tag) > maxLength {
+			maxLength = len(tag)
+		}
+	}
+
+	for i, tag := range tags {
+		fmt.Printf(" %v", color.BlueString(tag))
 		for i := 0; i < maxLength-len(tag)+1; i++ {
 			fmt.Print(" ")
 		}
@@ -187,6 +211,8 @@ func updateTable(tags []string, path string) {
 		panic(err) 
 	}
 	
+	// checkConsistency(tpTable, ptTable)
+
 	// fmt.Println(ptTable, tpTable)
 	
 	_, ok := ptTable.Table[path]
