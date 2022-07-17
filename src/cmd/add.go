@@ -12,8 +12,7 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-const Pt = "/home/ishwar/stuff and stuff/Taggit/src/database/pathToTag.db"
-const Tp = "/home/ishwar/stuff and stuff/Taggit/src/database/tagToPath.db"
+var input string
 
 type PathToTag struct {
 	Table map[string]map[string]bool
@@ -25,7 +24,7 @@ type TagToPath struct {
 
 func isValidTag(tag string) bool {
 	for _, c := range tag {
-		if !unicode.IsLetter(c) {
+		if !unicode.IsLetter(c) && !unicode.IsDigit(c) {
 			return false
 		}
 	}
@@ -35,7 +34,7 @@ func isValidTag(tag string) bool {
 func AddTags(path string) error {
 	prompt := promptui.Prompt{
 		Label:     "Hey there!, please enter tags",
-		Default:   " friends, birthday, pets",
+		Default:   "eg: tag1, tag2, tag3",
 		AllowEdit: false,
 		Validate: func(input string) error {
 			return nil
@@ -66,6 +65,7 @@ func AddTags(path string) error {
 			fmt.Println(color.RedString(tag))
 		}
 	}
+
 	updateTable(validTags, path)
 	return nil
 }
@@ -109,26 +109,33 @@ func RecoverTagToPathTable(path string) (TagToPath, error) {
 }
 
 func updateTable(tags []string, path string) {
-
 	ptTable, err := RecoverPathToTagTable(Pt)
 	if err != nil {
-		panic(err)
+		fmt.Scanln(&input)
+		panic(err) 
 	}
-
+	
 	tpTable, err := RecoverTagToPathTable(Tp)
 	if err != nil {
-		panic(err)
+		fmt.Scanln(&input)
+		panic(err) 
 	}
-
+	
+	// fmt.Println(ptTable, tpTable)
+	
 	_, ok := ptTable.Table[path]
 	if ok {
 		for _, tag := range tags {
-			_, ok := tpTable.Table[tag]
-			if !ok {
-				tpTable.Table[tag] = make(map[string]bool)
+			v, ok := ptTable.Table[path][tag]
+			if !ok || v == false {
+				ptTable.Table[path][tag] = true
+				_, ok := tpTable.Table[tag]
+				if !ok {
+					tpTable.Table[tag] = make(map[string]bool, 0)
+				}
+				tpTable.Table[tag][path] = true
 			}
-			ptTable.Table[path][tag] = true
-			tpTable.Table[tag][path] = true
+
 		}
 	} else {
 		// first time we are tagging file
@@ -146,9 +153,11 @@ func updateTable(tags []string, path string) {
 	}
 
 	if err := writeTable(Tp, tpTable); err != nil {
+		fmt.Scanln(&input)
 		panic(err)
 	}
 	if err := writeTable(Pt, ptTable); err != nil {
+		fmt.Scanln(&input)
 		panic(err)
 	}
 }
