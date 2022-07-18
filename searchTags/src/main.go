@@ -11,5 +11,5 @@ func main() {
 		errMsg := fmt.Errorf("sorry, encountered an error: %w", err)
 		cmd.ManageError(errMsg)
 	}
-	cmd.Hold()
+	// cmd.Hold()
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"unicode"
 
 	"github.com/fatih/color"
@@ -159,7 +160,7 @@ func checkConsistency(tpTable TagToPath, ptTable PathToTag) {
 
 func Hold() {
 	var input string
-	fmt.Println("\n\nPress press ENTER to exit...")
+	fmt.Println("\nPlease press ENTER to continue...")
 	fmt.Scanln(&input)
 }
 
@@ -167,4 +168,10 @@ func ManageError(err error) {
 	color.Red(err.Error())
 	Hold()
 	os.Exit(1)
+}
+
+func clearScreen() {
+	c := exec.Command("clear")
+	c.Stdout = os.Stdout
+	c.Run()
 }

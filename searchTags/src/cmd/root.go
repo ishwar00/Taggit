@@ -23,46 +23,77 @@ func init() {
 }
 
 func Execute() error {
-	prompt := promptui.Prompt{
-		Label: "Please enter tag to search",
-	}
-
-	tag, err := prompt.Run()
-	if err != nil {
-		ManageError(err)
-	}
-
-	tag = strings.TrimSpace(tag)
-	if !isValidTag(tag) {
-		return fmt.Errorf(color.RedString("Please enter a valid Tag :("))
-	}
-
-	paths, err := SearchByTags(tag)
-	if err != nil {
-		return err
-	}
-	paths = append(paths, "Exit")
-	if len(paths) > 0 {
-		prompt := promptui.Select{
-			Label: fmt.Sprintf("Found %v results :) ", len(paths) - 1),
-			Items: paths,
+	for {
+		prompt := promptui.Prompt{
+			Label: "Please enter tag to search",
 		}
 
-		index, _, err := prompt.Run()
+		tag, err := prompt.Run()
+		if err != nil {
+			ManageError(err)
+		}
 
+		tag = strings.TrimSpace(tag)
+		if !isValidTag(tag) {
+			return fmt.Errorf(color.RedString("Please enter a valid Tag :("))
+		}
+
+		paths, err := SearchByTags(tag)
 		if err != nil {
 			return err
 		}
-		if index == len(paths)-1 {
-			return nil
-		}
-		if err := open.Start(paths[index]); err != nil {
-			return err
-		}
+		if len(paths) > 0 {
+			paths = append(paths, "Search Again", "Exit")
+		listLoop:
+			for {
+				prompt := promptui.Select{
+					Label: fmt.Sprintf("Found %v results :) ", len(paths)-2),
+					Items: paths,
+				}
 
-	} else {
-		fmt.Printf("Sorry, no files are tagged by %v yet :(\n", color.YellowString(tag))
+				_, result, err := prompt.Run()
+				if err != nil {
+					return err
+				}
+				switch result {
+				case "Exit":
+					return Exit("")
+				case "Search Again":
+					break listLoop
+				default:
+					if err := open.Start(result); err != nil {
+						return err
+					}
+				}
+				clearScreen()
+			}
+
+		} else {
+			fmt.Printf("Sorry, no files are tagged by %v yet :/ \n", color.YellowString(tag))
+			prompt := promptui.Select{
+				Label: "Please go with",
+				Items: []string{
+					"Search Again",
+					"Exit",
+				},
+			}
+
+			_, result, err := prompt.Run()
+			if err != nil {
+				return err
+			}
+
+			switch result {
+			case "Exit":
+				return Exit("")
+			case "Search Again":
+				// continue
+				// do nothing
+			default:
+				return fmt.Errorf("sorry, something unexpected happened")
+			}
+		}
+		// Hold()
+		clearScreen()
 	}
-
-	return nil
 }

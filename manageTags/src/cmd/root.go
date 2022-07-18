@@ -24,32 +24,36 @@ func init() {
 }
 
 func Execute(path string) error {
-	fmt.Printf("file name: %v\n", path)
-	prompt := promptui.Select{
-		Label: "Please select operation",
-		Items: []string{
-			"Add tags",
-			"show tags",
-			"remove tags",
-		},
-	}
-	i, _, err := prompt.Run()
+	for {
+		fmt.Printf("file name: %v\n", path)
+		prompt := promptui.Select{
+			Label: "Please select operation",
+			Items: []string{
+				"Add tags",
+				"Show tags",
+				"Remove tags",
+				"Exit",
+			},
+		}
+		i, _, err := prompt.Run()
 
-	if err != nil {
-		return err
-	}
+		if err != nil {
+			return err
+		}
 
-	operations := []func(string) error{
-		AddTags,
-		ShowTags,
-		RemoveTags,
-	}
+		operations := []func(string) error{
+			AddTags,
+			ShowTags,
+			RemoveTags,
+			Exit,
+		}
 
-	if err := operations[i](path); err != nil {
-		return err
+		if err := operations[i](path); err != nil {
+			return err
+		}
+		Hold()
+		clearScreen()
 	}
-
-	return nil
 }
 
 func createDB(path string) {
