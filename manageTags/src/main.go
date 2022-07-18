@@ -18,6 +18,6 @@ func main() {
 		errMsg := fmt.Errorf(doc)
 		cmd.ManageError(errMsg)
 	}
-
 	cmd.Execute(os.Args[1])
+	cmd.Hold()
 }
