@@ -33,14 +33,14 @@ func AddTags(path string) error {
 		}
 	}
 	if len(invalideTags) > 0 {
-		fmt.Printf("\n only %v characters are allowed", color.YellowString("alphanumeric"))
-		color.Red("Found invalid tags :(, following tags are not allowed:")
+		fmt.Printf("\nOnly %v characters are allowed", color.YellowString("alphanumeric"))
+		color.Red("\nFound invalid tags :(, following tags are not allowed:")
 		printTagsRed(invalideTags)
 		fmt.Println("")
 	}
 
 	updateTable(validTags, path)
-	fmt.Printf("\nSuccefully added following tags to %v: \n", path)
+	fmt.Printf("\nSuccessfully added following tags to %v: \n", path)
 	printTagsGreen(validTags)
 	fmt.Println("")
 	return nil

@@ -1,15 +1,15 @@
 package cmd
 
 import (
-	"os"
 	"time"
+	"fmt"
 
 	"github.com/fatih/color"
 )
 
 func Exit(_ string) error {
-	color.Green("...................THANK YOU FOR USING TAGGIT :)")
+	clearScreen()
+	color.Green("\n\n\n...................THANK YOU FOR USING TAGGIT :)\n\n\n")
 	time.Sleep(time.Second)
-	os.Exit(1)
-	return nil
+	return fmt.Errorf("closing")
 }
